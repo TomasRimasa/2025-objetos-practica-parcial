@@ -1,5 +1,108 @@
 import practica.*
 
-test "Test de ejemplo" {
-		assert.equals(4, 2 + 2)
+
+const sora = new Heroe(fuerza = 10, puntosDeMana = 8, llaveEspada = llaveDelReino)
+const mickey = new Heroe(fuerza = 5, puntosDeMana = 13, llaveEspada = exploradorEstelar)
+const riku = new Heroe(fuerza = 15, puntosDeMana = 4, llaveEspada = caminoAlAlba)
+
+const llaveDelReino = new LlaveEspada(poderFisico = 3, poderMagico = 5)
+const exploradorEstelar = new LlaveEspada(poderFisico = 2, poderMagico = 10)
+const caminoAlAlba = new LlaveEspada(poderFisico = 5, poderMagico = 3)
+const brisaDescarada = new LlaveEspada(poderFisico = 5, poderMagico = 2)
+
+const piro = new Hechizo(poderBase = 5, tipo = "fuego")
+const chispa = new Hechizo(poderBase = 1, tipo = "luz")
+const ragnarok = new Hechizo(poderBase = 30, tipo = "luz")
+
+test "Umbrío (incorpóreo oscuro) - ataque físico incorpóreo" {
+	const enemigo = new Enemigo(puntosDeVida = 50, elementoEnemigo = "oscuridad")
+
+	const ataque = new AtaqueFiscoIncorporeo(defensa = 10)
+
+	enemigo.recibirAtaque(ataque, 20)
+
+	assert.equals(40, enemigo.puntosDeVida())
+}
+
+test "Nocturno rojo - ataque mágico fuego (no daña)" {
+	const nocturno = new Enemigo(puntosDeVida = 80, elementoEnemigo = "fuego")
+
+	const ataque = new AtaqueMagico(elementoAtaque = "fuego")
+
+	nocturno.recibirAtaque(ataque, 100)
+
+	assert.equals(80, nocturno.puntosDeVida())
+}
+
+test "Nocturno rojo - ataque mágico hielo (x2)" {
+	const nocturno = new Enemigo(puntosDeVida = 80, elementoEnemigo = "fuego")
+
+	const ataque = new AtaqueMagico(elementoAtaque = "hielo")
+
+	nocturno.recibirAtaque(ataque, 10)
+
+	assert.equals(60, nocturno.puntosDeVida())
+}
+
+test "Nocturno rojo - ataque mágico luz" {
+	const nocturno = new Enemigo(puntosDeVida = 80, elementoEnemigo = "fuego")
+
+	const ataque = new AtaqueMagico(elementoAtaque = "luz")
+
+	nocturno.recibirAtaque(ataque, 10)
+
+	assert.equals(70, nocturno.puntosDeVida())
+}
+
+test "Nocturno rojo - ataque físico sincorazón" {
+	const nocturno = new Enemigo(puntosDeVida = 80, elementoEnemigo = "fuego")
+
+	nocturno.recibirAtaque(ataqueFisicoSinCorazon, 40)
+
+	assert.equals(44, nocturno.puntosDeVida())
+}
+
+/////////////////Parte 2 /////////////////////
+
+test "Sora ataca físicamente a un umbrío -> queda 47 PV" {
+    const umbrio = new Enemigo(puntosDeVida = 50, elementoEnemigo = "oscuridad")
+
+    sora.atacarEnemigo(umbrio)
+
+    assert.equals(47, umbrio.puntosDeVida())
+}
+
+test "Riku ataca físicamente a un nocturno rojo -> queda 62 PV" {
+    const nocturno = new Enemigo(puntosDeVida = 80, elementoEnemigo = "fuego")
+
+    riku.atacarEnemigo(nocturno)
+
+    assert.equals(62, nocturno.puntosDeVida())
+}
+
+test "Sora lanza Piro a un rapsodia azul -> queda 30 PV y Sora queda con 3 PM" {
+    const rapsodia = new Enemigo(puntosDeVida = 50, elementoEnemigo = "hielo")
+
+    sora.lanzarhechizo(piro, rapsodia)
+
+    assert.equals(30, rapsodia.puntosDeVida())
+    assert.equals(3, sora.puntosDeMana())
+}
+
+test "Sora equipa Examinadora y lanza Piro a rapsodia azul -> queda 0 PV" {
+    const rapsodia = new Enemigo(puntosDeVida = 30, elementoEnemigo = "hielo")
+
+    sora.cambiarEspada(1, 10)
+    sora.lanzarhechizo(piro, rapsodia)
+
+    assert.equals(0, rapsodia.puntosDeVida())
+}
+
+test "Mickey intenta lanzar Ragnarok a un umbrío pero no tiene PM suficientes" {
+    const umbrio = new Enemigo(puntosDeVida = 50, elementoEnemigo = "oscuridad")
+
+    mickey.lanzarhechizo(ragnarok, umbrio)
+
+    assert.equals(50, umbrio.puntosDeVida())
+    assert.equals(13, mickey.puntosDeMana())
 }
